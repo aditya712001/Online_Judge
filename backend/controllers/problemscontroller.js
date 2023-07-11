@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 
 // get all problems
 const getproblems = async (req, res) => {
-  // const user_id = req.user._id
+  const user_id = req.user._id
 
-  const problemsdata = await problems.find({}).sort({createdAt: -1})
+  const problemsdata = await problems.find({user_id}).sort({createdAt: -1})
 
   res.status(200).json(problemsdata)
 }
