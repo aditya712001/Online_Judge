@@ -1,7 +1,7 @@
 // import { useWorkoutsContext } from '../hooks/useWorkoutsContext'
-// import { useAuthContext } from '../hooks/useAuthContext'
+import { useAuthContext } from '../hooks/useAuthContext'
 // // new
-// import WorkoutFormEdit from '../components/WorkoutFormEdit'
+import Compiler from '../components/compiler'
 import { useEffect, useState }from 'react'
 import { Link, useParams } from 'react-router-dom'
 // date fns
@@ -10,7 +10,7 @@ import { Link, useParams } from 'react-router-dom'
 const ProblemDetails = () => {
   const { id } = useParams();
   // const { dispatch } = useWorkoutsContext()
-  // const { user } = useAuthContext()
+  const { user } = useAuthContext()
 
   // const handleClick = async () => {
   //   if (!user) {
@@ -34,7 +34,7 @@ const ProblemDetails = () => {
   useEffect(() => {
     const fetchproblem = async () => {
       const response = await fetch('/api/problems/'+id, {
-        // headers: {'Authorization': `Bearer ${user.token}`},
+        headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
 
@@ -44,15 +44,16 @@ const ProblemDetails = () => {
       }
     }
 
-    // if (user) {
+    if (user) {
       fetchproblem()
-    // }
+    }
   }, [])
 
   return (
     <div className="workout-details">
       <h4>{problem.title}</h4>
       <p><strong>Statement: </strong>{problem.statement}</p>
+      <Compiler/>
       {/* <p><strong>Reps: </strong>{workout.reps}</p> */}
       {/* <p>{formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}</p> */}
       {/* <span className="material-symbols-outlined" onClick={handleClick}>delete</span> */}

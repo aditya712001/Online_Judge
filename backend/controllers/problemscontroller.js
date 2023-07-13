@@ -1,11 +1,13 @@
 const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
+const { generateFile } = require('../generateFile');
+const { executeCpp } = require('../executeCpp');
 
 // get all problems
 const getproblems = async (req, res) => {
-  const user_id = req.user._id
+  // const user_id = req.user._id
 
-  const problemsdata = await problems.find({user_id}).sort({createdAt: -1})
+  const problemsdata = await problems.find({}).sort({createdAt: -1})
 
   res.status(200).json(problemsdata)
 }
@@ -25,6 +27,25 @@ const getproblem = async (req, res) => {
   }
   
   res.status(200).json(problem)
+}
+
+const sendcode = async (req, res) => {
+  // const language = req.body.language;
+  // const code = req.body.code;
+
+  const { language = 'cpp', code } = req.body;
+  const { id } = req.params
+
+  if (code === undefined) {
+      return res.status(404).json({ success: false, error: "Empty code!" });
+  }
+  try {
+      const filePath = await generateFile(language, code);
+      const output = await executeCpp(filePath,id);
+      res.json({ filePath, output });
+  } catch (error) {
+      res.status(500).json({ error: error });
+  }
 }
 
 
@@ -121,6 +142,7 @@ const getproblem = async (req, res) => {
 module.exports = {
   getproblems,
   getproblem,
+  sendcode
   // createWorkout,
   // deleteWorkout,
   // updateWorkout

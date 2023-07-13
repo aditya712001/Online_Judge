@@ -6,7 +6,7 @@ import Problems from './pages/problems'
 import ProblemDetails from './components/problemDetails'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-// import Navbar from './components/Navbar'
+import Navbar from './components/Navbar'
 // new
 // import WorkoutFormEdit from './components/WorkoutFormEdit'
 
@@ -16,12 +16,12 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="pages">
           <Routes>
             <Route 
               path="/" 
-              element={!user ? <Login /> : <Problems /> }
+              element={user ? <Problems /> : <Navigate to="/login" /> }
             />
             <Route 
               path="/login" 
@@ -33,7 +33,7 @@ function App() {
             />
             <Route 
               path="/:id" 
-              element={!user ? <Login /> : <ProblemDetails />} 
+              element={user ? <ProblemDetails /> : <Navigate to="/login" />} 
             />
           </Routes>
         </div>

@@ -3,6 +3,7 @@ const {
 //   createWorkout,
   getproblems,
   getproblem,
+  sendcode
 //   deleteWorkout,
 //   updateWorkout
 } = require('../controllers/problemscontroller')
@@ -18,6 +19,9 @@ router.get('/', getproblems)
 
 //GET a single problem
 router.get('/:id', getproblem)
+
+//POST code
+router.post('/:id', sendcode) 
 
 // // POST a new workout
 // router.post('/', createWorkout)

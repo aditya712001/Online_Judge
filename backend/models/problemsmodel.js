@@ -10,11 +10,18 @@ const problemsSchema = new Schema({
   statement: { 
     type: String, 
     required: true 
-},
-  user_id: {
-    type: String,
-    required: true
+  },
+  ip:{
+    type: String
+  },
+  op:{
+    type: String
   }
+// ,
+//   user_id: {
+//     type: String,
+//     required: true
+//   }
 }, { timestamps: true })
 
 module.exports = mongoose.model('problems', problemsSchema)

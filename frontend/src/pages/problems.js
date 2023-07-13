@@ -1,19 +1,19 @@
 import { useEffect, useState }from 'react'
 // import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
-// import { useAuthContext } from "../hooks/useAuthContext"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 // components
 // import WorkoutForm from '../components/WorkoutForm'
 import { Link } from 'react-router-dom'
 const Problems = () => {
   // const {workouts, dispatch} = useWorkoutsContext()
-  // const {user} = useAuthContext()
+  const {user} = useAuthContext()
   const [problems, setproblems] = useState('')
 
   useEffect(() => {
     const fetchproblems = async () => {
       const response = await fetch('/api/problems', {
-        // headers: {'Authorization': `Bearer ${user.token}`},
+        headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
 
@@ -23,9 +23,9 @@ const Problems = () => {
       }
     }
 
-    // if (user) {
+    if (user) {
       fetchproblems()
-    // }
+    }
   }, [])
 
   return (
