@@ -48,7 +48,7 @@ const Leaderboard = () => {
   return (
     <div >
        <div className="workouts"> 
-        {submissions && (submissions.map((submission) => 
+        {submissions && submissions.map((submission) =>( 
           <div className="workout-details">
           <h4>{submission.title}{submission.verdict}{submission.user}</h4>
           <a href={`http://localhost:3000/solutions/${submission._id}`} target='_blank'>Code </a>
