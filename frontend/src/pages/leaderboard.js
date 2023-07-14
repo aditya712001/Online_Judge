@@ -27,7 +27,6 @@ const Leaderboard = () => {
 
     if (user) {
       fetchsubmissions()
-      const response = await axios.get(`http://localhost:3000/solutions/${submission._id}`, data)
     }
   }, [])
 
