@@ -33,7 +33,7 @@ const ProblemDetails = () => {
 
   useEffect(() => {
     const fetchproblem = async () => {
-      const response = await fetch('/api/problems/'+id, {
+      const response = await fetch('/api/oj/problems/'+id, {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
@@ -53,8 +53,7 @@ const ProblemDetails = () => {
     <div className="workout-details">
       <h4>{problem.title}</h4>
       <p><strong>Statement: </strong>{problem.statement}</p>
-      <Compiler/>
-      {/* <p><strong>Reps: </strong>{workout.reps}</p> */}
+      <Compiler key={problem._id} />
       {/* <p>{formatDistanceToNow(new Date(problem.createdAt), { addSuffix: true })}</p> */}
       {/* <span className="material-symbols-outlined" onClick={handleClick}>delete</span> */}
       {/* new */}

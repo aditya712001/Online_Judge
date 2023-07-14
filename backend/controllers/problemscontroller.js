@@ -2,13 +2,13 @@ const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
 const { generateFile } = require('../generateFile');
 const { executeCpp } = require('../executeCpp');
+const submissions = require('../models/submissionsmodel');
 
 // get all problems
 const getproblems = async (req, res) => {
   // const user_id = req.user._id
 
   const problemsdata = await problems.find({}).sort({createdAt: -1})
-
   res.status(200).json(problemsdata)
 }
 
@@ -32,7 +32,7 @@ const getproblem = async (req, res) => {
 const sendcode = async (req, res) => {
   // const language = req.body.language;
   // const code = req.body.code;
-
+  const user_id = req.user._id
   const { language = 'cpp', code } = req.body;
   const { id } = req.params
 
@@ -41,13 +41,36 @@ const sendcode = async (req, res) => {
   }
   try {
       const filePath = await generateFile(language, code);
-      const output = await executeCpp(filePath,id);
+      const output = await executeCpp(filePath,id,user_id,code);
       res.json({ filePath, output });
   } catch (error) {
       res.status(500).json({ error: error });
   }
 }
 
+// get all submissions
+const getsubmissions = async (req, res) => {
+  // const user_id = req.user._id
+  const submissionsdata = await submissions.find({}).sort({createdAt: -1})
+  res.status(200).json(submissionsdata)
+}
+
+// get a code
+const getcode = async (req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({error: 'No such problem'})
+  }
+
+  const code = await submissions.findById(id)
+
+  if (!code) {
+    return res.status(404).json({error: 'No such code'})
+  }
+  
+  res.download(code.solution,"code")
+}
 
 // create new workout
 // const createWorkout = async (req, res) => {
@@ -142,7 +165,9 @@ const sendcode = async (req, res) => {
 module.exports = {
   getproblems,
   getproblem,
-  sendcode
+  sendcode,
+  getsubmissions,
+  getcode
   // createWorkout,
   // deleteWorkout,
   // updateWorkout

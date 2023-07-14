@@ -3,7 +3,9 @@ const {
 //   createWorkout,
   getproblems,
   getproblem,
-  sendcode
+  sendcode,
+  getsubmissions,
+  getcode
 //   deleteWorkout,
 //   updateWorkout
 } = require('../controllers/problemscontroller')
@@ -15,14 +17,19 @@ const router = express.Router()
 router.use(requireAuth)
 
 // GET all problems
-router.get('/', getproblems)
+router.get('/problems', getproblems)
 
 //GET a single problem
-router.get('/:id', getproblem)
+router.get('/problems/:id', getproblem)
 
 //POST code
-router.post('/:id', sendcode) 
+router.post('/problems/:id', sendcode) 
 
+// GET all submissions
+router.get('/', getsubmissions)
+
+// GET code
+router.get('/solutions/:id', getcode)
 // // POST a new workout
 // router.post('/', createWorkout)
 

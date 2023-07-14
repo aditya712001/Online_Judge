@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 })
 
 // routes
-app.use('/api/problems', ojroutes)
+app.use('/api/oj', ojroutes)
 app.use('/api/user', userRoutes)
 
 // connect to db

@@ -6,6 +6,7 @@ import Problems from './pages/problems'
 import ProblemDetails from './components/problemDetails'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import Leaderboard from './pages/leaderboard'
 import Navbar from './components/Navbar'
 // new
 // import WorkoutFormEdit from './components/WorkoutFormEdit'
@@ -19,8 +20,12 @@ function App() {
         <Navbar />
         <div className="pages">
           <Routes>
-            <Route 
+          <Route 
               path="/" 
+              element={user ? <Leaderboard /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/problems" 
               element={user ? <Problems /> : <Navigate to="/login" /> }
             />
             <Route 
@@ -32,7 +37,7 @@ function App() {
               element={!user ? <Signup /> : <Navigate to="/" />} 
             />
             <Route 
-              path="/:id" 
+              path="/problems/:id" 
               element={user ? <ProblemDetails /> : <Navigate to="/login" />} 
             />
           </Routes>

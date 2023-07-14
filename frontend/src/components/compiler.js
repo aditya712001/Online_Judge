@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext'
-import { useParams } from 'react-router-dom'
+import { useParams, Link, redirect } from 'react-router-dom'
 
-function Compiler() {
-  const [code, setCode] = useState('');
-  const [output, setOutput] = useState('');
-  const { id } = useParams();
+const Compiler=()=> {
+  const [code, setCode] = useState('')
+  const [output, setOutput] = useState('')
+  const { id } = useParams()
   const { user } = useAuthContext()
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     const payload = {
       language: 'cpp',
       code
-    };
+    }
 
     try {
         // if (!user) {
@@ -21,7 +22,7 @@ function Compiler() {
         //   }
         if(user)
         {
-          const response = await fetch('/api/problems/'+ id, {
+          const response = await fetch('/api/oj/problems/'+ id, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -32,11 +33,11 @@ function Compiler() {
           const data = await response.json()
       
     //   const { data } = await axios.post('http://localhost:5000/run', payload);
-      console.log(data);
-      setOutput(data.output);
+      console.log(data)
+      setOutput(data.output)
         }
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response)
     }
   }
 
@@ -63,7 +64,7 @@ function Compiler() {
         </div>
       }
      </div>
-  );
+  )
 }
 
 export default Compiler;
