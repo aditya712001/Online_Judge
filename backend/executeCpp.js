@@ -5,11 +5,6 @@ const problems = require('./models/problemsmodel')
 const submissions = require('./models/submissionsmodel')
 const User = require('./models/userModel')
 const mongoose = require('mongoose')
-// const express = require('express')
-// const app = express()
-
-// middleware
-// app.use(express.json())
 
 const outputPath = path.join(__dirname, "outputs")
 
@@ -28,31 +23,22 @@ const executeCpp = async (filepath,id,user_id) => {
     const { v4: uuid } = require('uuid')
 
     const dirtest = path.join(__dirname, 'testcases')
-    const outdirtest = path.join(__dirname, 'outtestcases')
-    const outdirtestdb = path.join(__dirname, 'outtestcasesdb')
-
 
 if (!fs.existsSync(dirtest)) {
     fs.mkdirSync(dirtest, { recursive: true })
-}
-if (!fs.existsSync(outdirtest)) {
-    fs.mkdirSync(outdirtest, { recursive: true })
-}
-if (!fs.existsSync(outdirtestdb)) {
-    fs.mkdirSync(outdirtestdb, { recursive: true })
 }
 
 // const generateFile = async (format, content) => {
     const jobIDtest = uuid();
     const filename = `${jobIDtest}.txt`
-    const outfilename = `out${jobIDtest}.txt`
-    const outfilenamedb = `out${jobIDtest}db.txt`
     const filePathtest = path.join(dirtest, filename)
-    const outfilePathtest = path.join(outdirtest, outfilename)
-    const outfilePathtestdb = path.join(outdirtestdb, outfilenamedb)
+    const normalize = (text) => {
+        return text.replace(/\r\n/g, "\n");
 
+    }
+    // input=normalize(input)
+    console.log(input)
     fs.writeFileSync(filePathtest, input)
-    fs.writeFileSync(outfilePathtestdb, output)
     // return filePath;
 // };
 
@@ -69,7 +55,7 @@ if (!fs.existsSync(outdirtestdb)) {
             (error, stdout, stderr) => {
                 if (error) {
                     // submissions.create({verdict:"Error"+error,title:problem.title,user:user.email,solution:filepath})
-                    // // reject({ error, stderr })
+                    reject({ error, stderr })
                     // stdout=error
                     // resolve(stdout);
                 }
@@ -79,24 +65,10 @@ if (!fs.existsSync(outdirtestdb)) {
                     stdout=stderr
                     resolve(stdout);
                 }
-                const normalizeLineEndings = (text) => {
-                    return text.replace(/(\r\n|\n|\r)/gm, "\n");
 
-                }
-
-                // Inside your code
-
-                const solution = normalizeLineEndings(stdout)
-                const expectedOutput = normalizeLineEndings(output)
-                // if (solution === expectedOutput) {
-                //     stdout = 'Accepted ' + stdout
-                // } else {
-                //     stdout = 'Wrong Answer'
-                // }
-
-                // resolve(stdout)
-                // const opdb=fs.readFileSync(outfilePathtestdb)
-                // const op=fs.readFileSync(outfilePathtest)
+                const solution = normalize(stdout)
+                const expectedOutput = normalize(output)
+                
                 console.log(solution)
                 console.log(expectedOutput)
                 if(solution===expectedOutput)
@@ -114,44 +86,6 @@ if (!fs.existsSync(outdirtestdb)) {
             }
         )
     })
-//     const { spawn } = require('child_process');
-// let output
-// const cppProgram = spawn('g++', [`${filepath}`, '-o', `${outPath}`]);
-// cppProgram.stdout.on('data', (data) => {
-//   output=data
-//   console.log(`stdout: ${data}`);
-// });
-
-// cppProgram.stderr.on('data', (data) => {
-//   console.error(`stderr: ${data}`);
-// });
-
-// cppProgram.on('close', async(code) => {
-//   if (code === 0) {
-//     const program = spawn(`${outPath}`);
-//     const problem = await problems.findById(id) 
-//     const input = problem.ip // Your input string
-//     program.stdin.write(input);
-//     program.stdin.end();
-
-//     program.stdout.on('data', (data) => {
-//       console.log(`Output: ${data}`);
-//       output=data
-//     });
-
-//     program.stderr.on('data', (data) => {
-//       console.error(`Error: ${data}`);
-//     });
-
-//     program.on('close', (code) => {
-//       console.log(`Child process exited with code ${code}`);
-//     });
-//   } else {
-//     console.error(`Compilation error. Exit code ${code}`);
-//   }
-// });
-// console.log(output)
-// return output
 };
 
 module.exports = {
