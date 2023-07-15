@@ -28,16 +28,31 @@ const executeCpp = async (filepath,id,user_id) => {
     const { v4: uuid } = require('uuid')
 
     const dirtest = path.join(__dirname, 'testcases')
+    const outdirtest = path.join(__dirname, 'outtestcases')
+    const outdirtestdb = path.join(__dirname, 'outtestcasesdb')
+
 
 if (!fs.existsSync(dirtest)) {
     fs.mkdirSync(dirtest, { recursive: true })
+}
+if (!fs.existsSync(outdirtest)) {
+    fs.mkdirSync(outdirtest, { recursive: true })
+}
+if (!fs.existsSync(outdirtestdb)) {
+    fs.mkdirSync(outdirtestdb, { recursive: true })
 }
 
 // const generateFile = async (format, content) => {
     const jobIDtest = uuid();
     const filename = `${jobIDtest}.txt`
+    const outfilename = `out${jobIDtest}.txt`
+    const outfilenamedb = `out${jobIDtest}db.txt`
     const filePathtest = path.join(dirtest, filename)
+    const outfilePathtest = path.join(outdirtest, outfilename)
+    const outfilePathtestdb = path.join(outdirtestdb, outfilenamedb)
+
     fs.writeFileSync(filePathtest, input)
+    fs.writeFileSync(outfilePathtestdb, output)
     // return filePath;
 // };
 
@@ -50,17 +65,24 @@ if (!fs.existsSync(dirtest)) {
 
     return new Promise((resolve, reject) => {
         exec(
-            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && (.\\${jobId}.exe < "${filePathtest}")`,
+            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${jobId}.exe < ${filePathtest} `,
             (error, stdout, stderr) => {
                 if (error) {
-                    reject({ error, stderr })
+                    // submissions.create({verdict:"Error"+error,title:problem.title,user:user.email,solution:filepath})
+                    // // reject({ error, stderr })
+                    // stdout=error
+                    // resolve(stdout);
                 }
                 if (stderr) {
-                    reject(stderr)
+                    submissions.create({verdict:"Compilation Error",title:problem.title,user:user.email,solution:filepath})
+                    // reject(stderr)
+                    stdout=stderr
+                    resolve(stdout);
                 }
                 const normalizeLineEndings = (text) => {
-                    return text.replace(/\r\n/g, "\n")
-                };
+                    return text.replace(/(\r\n|\n|\r)/gm, "\n");
+
+                }
 
                 // Inside your code
 
@@ -73,7 +95,8 @@ if (!fs.existsSync(dirtest)) {
                 // }
 
                 // resolve(stdout)
-                
+                // const opdb=fs.readFileSync(outfilePathtestdb)
+                // const op=fs.readFileSync(outfilePathtest)
                 console.log(solution)
                 console.log(expectedOutput)
                 if(solution===expectedOutput)

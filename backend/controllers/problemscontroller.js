@@ -1,8 +1,8 @@
 const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
-const { generateFile } = require('../generateFile');
-const { executeCpp } = require('../executeCpp');
-const submissions = require('../models/submissionsmodel');
+const { generateFile } = require('../generateFile')
+const { executeCpp } = require('../executeCpp')
+const submissions = require('../models/submissionsmodel')
 
 // get all problems
 const getproblems = async (req, res) => {
@@ -41,7 +41,7 @@ const sendcode = async (req, res) => {
   }
   try {
       const filePath = await generateFile(language, code);
-      const output = await executeCpp(filePath,id,user_id,code);
+      const output = await executeCpp(filePath,id,user_id);
       res.json({ filePath, output });
   } catch (error) {
       res.status(500).json({ error: error });
@@ -68,8 +68,8 @@ const getcode = async (req, res) => {
   if (!code) {
     return res.status(404).json({error: 'No such code'})
   }
-  
-  res.download(code.solution,"code")
+  // console.log('here')
+  res.download(code.solution)
 }
 
 // create new workout
