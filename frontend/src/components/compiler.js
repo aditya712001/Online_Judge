@@ -60,7 +60,7 @@ const Compiler=()=> {
       </button>
       {output &&
         <div >
-          <p>{output}</p>
+          <pre>{output}</pre>
         </div>
       }
      </div>

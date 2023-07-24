@@ -25,7 +25,11 @@ const getproblem = async (req, res) => {
   if (!problem) {
     return res.status(404).json({error: 'No such problem'})
   }
-  
+  const normalize = (text) => {
+    return text.replace(/\r\n/g, "\n");
+}
+// console.log(problem.statement)
+  problem.statement=normalize(problem.statement)
   res.status(200).json(problem)
 }
 

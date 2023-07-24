@@ -28,12 +28,11 @@ const Leaderboard = () => {
   }, [])
 
   return (
-    <div >
+    <div>
        <div className="workouts"> 
         {submissions && submissions.map((submission) =>( 
           <div className="workout-details">
-          <h4>{submission.title}{submission.verdict}{submission.user}</h4>
-          <button onClick={async() => {
+          <pre className='leaderboard'>{submission.title}      {submission.verdict}      {submission.user}       {submission.createdAt}       <button onClick={async() => {
     if (!user) {
       return
     }
@@ -57,7 +56,8 @@ const Leaderboard = () => {
           alert(error);
       })
     
-  }}>Download Code</button>
+  }}>Download Code</button> </pre>
+          
           {/* <a href={`http://localhost:3000/solutions/${submission._id}`} target='_blank'>Code </a> */}
           </div>
         ))}

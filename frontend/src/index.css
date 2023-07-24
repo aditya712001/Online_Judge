@@ -11,6 +11,9 @@ body {
   margin: 0;
   font-family: "Poppins";
 }
+.leaderboard{
+  font-size: 25px;
+}
 header {
   background: #fff;
 }
@@ -66,7 +69,6 @@ header a {
   border-radius: 50%;
   color: #333;
 }
-
 /* new workout form */
 label, input {
   display: block;
@@ -127,4 +129,13 @@ form.signup, form.login {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
+}
+button {
+  background: var(--primary);
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
 }
