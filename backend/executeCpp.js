@@ -33,8 +33,8 @@ if (!fs.existsSync(dirtest)) {
     const filename = `${jobIDtest}.txt`
     const filePathtest = path.join(dirtest, filename)
     const normalize = (text) => {
-        return text.replace(/\r\n/g, "\n");
-
+        text=text.replace(/(\r\n|\n|\r)/gm, "\n");
+        return text.trim();
     }
     // input=normalize(input)
     console.log(input)

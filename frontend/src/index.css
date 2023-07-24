@@ -1,18 +1,21 @@
 /* google font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* layout */
 :root {
   --primary: #1aac83;
   --error: #e7195a;
 }
+textarea{
+  border: solid;
+}
 body {
   background: #f1f1f1;
   margin: 0;
   font-family: "Poppins";
-}
-.leaderboard{
-  font-size: 25px;
 }
 header {
   background: #fff;
@@ -113,8 +116,8 @@ nav a, nav button {
 }
 nav button {
   background: #fff;
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  color: var(--error);
+  /* border: 2px solid var(--primary); */
   padding: 6px 10px;
   border-radius: 4px;
   font-family: "Poppins";

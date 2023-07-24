@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthContext } from './hooks/useAuthContext'
 
 // pages & components
-import Problems from './pages/problems'
-import ProblemDetails from './components/problemDetails'
+import Problems from './pages/problemtable'
+import ProblemDetails from './components/prblmdetails'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import Leaderboard from './pages/leaderboard'
+import Leaderboard from './pages/leadertable'
 import Navbar from './components/Navbar'
 // new
 // import WorkoutFormEdit from './components/WorkoutFormEdit'

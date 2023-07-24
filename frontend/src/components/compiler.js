@@ -51,16 +51,17 @@ const Compiler=()=> {
         <option value='java'>Java</option>
       </select>
       <br /> */}
-      <textarea rows='20' cols='75' value={code} onChange={(e) => {
+      <textarea rows='20' cols='75' placeholder='Write your Code' value={code} onChange={(e) => {
         setCode(e.target.value);
       }}></textarea>
       <br />
       <button onClick={handleSubmit}>
         Submit
       </button>
+      <br/>
       {output &&
         <div >
-          <pre>{output}</pre>
+          <pre wrap="True">{output}</pre>
         </div>
       }
      </div>
