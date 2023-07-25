@@ -12,7 +12,7 @@ const Problems = () => {
 
   useEffect(() => {
     const fetchproblems = async () => {
-      const response = await fetch('/api/oj/problems', {
+      const response = await fetch('/api/oj/', {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
@@ -34,7 +34,7 @@ const Problems = () => {
         {problems && problems.map((problem) => (
           <div className="workout-details">
           <h4>{problem.title}</h4>
-          <span className="material-symbols-outlined"> <Link to={`/problems/${problem._id}`}>Link</Link></span>
+          <span className="material-symbols-outlined"> <Link to={`/${problem._id}`}>Link</Link></span>
         </div>
         ))}
        </div>

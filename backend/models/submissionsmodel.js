@@ -18,11 +18,11 @@ const submissionsSchema = new Schema({
   solution: {
     type: String,
     required: true
+  },
+  time:{
+    type:String,
+    required:true
   }
-  // time:{
-  //   type:String,
-  //   required:true
-  // }
 }, { timestamps: true })
 
 module.exports = mongoose.model('submissions', submissionsSchema)

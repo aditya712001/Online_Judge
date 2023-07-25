@@ -18,8 +18,7 @@ const executeCpp = async (filepath,id,user_id) => {
     const user = await User.findById(user_id) 
     const input = problem.ip // Your input string
     const output=problem.op
-    // const fs = require('fs');
-    // const path = require('path');
+    
     const { v4: uuid } = require('uuid')
 
     const dirtest = path.join(__dirname, 'testcases')
@@ -36,15 +35,7 @@ if (!fs.existsSync(dirtest)) {
         text=text.replace(/(\r\n|\n|\r)/gm, "\n");
         return text.trim();
     }
-    // input=normalize(input)
-    console.log(input)
     fs.writeFileSync(filePathtest, input)
-    // return filePath;
-// };
-
-// module.exports = {
-//     generateFile,
-// };
 
     const jobId = path.basename(filepath).split(".")[0]
     const outPath = path.join(outputPath, `${jobId}.exe`)
@@ -52,7 +43,7 @@ if (!fs.existsSync(dirtest)) {
     return new Promise((resolve, reject) => {
         exec(
             `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${jobId}.exe < ${filePathtest} `,
-            (error, stdout, stderr) => {
+            async(error, stdout, stderr) => {
                 if (error) {
                     // submissions.create({verdict:"Error"+error,title:problem.title,user:user.email,solution:filepath})
                     reject({ error, stderr })
@@ -60,12 +51,14 @@ if (!fs.existsSync(dirtest)) {
                     // resolve(stdout);
                 }
                 if (stderr) {
-                    submissions.create({verdict:"Compilation Error",title:problem.title,user:user.email,solution:filepath})
-                    // reject(stderr)
-                    stdout=stderr
-                    resolve(stdout);
+                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
+                    await submissions.create({verdict:"Compilation Error",title:problem.title,user:user.email,solution:filepath,time:time})
+                    // stdout=stderr
+                    reject(stderr)
+                    // resolve(stdout)
                 }
 
+                else{
                 const solution = normalize(stdout)
                 const expectedOutput = normalize(output)
                 
@@ -73,16 +66,19 @@ if (!fs.existsSync(dirtest)) {
                 console.log(expectedOutput)
                 if(solution===expectedOutput)
                 {
-                    submissions.create({verdict:"Accepted",title:problem.title,user:user.email,solution:filepath})
+                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
+                    await submissions.create({verdict:"Accepted",title:problem.title,user:user.email,solution:filepath,time:time})
                     stdout="Accepted\n"+stdout
                 }
                 else
                 {
+                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
                     stdout="Wrong Answer"
-                    submissions.create({verdict:"Wrong Answer",title:problem.title,user:user.email,solution:filepath})
+                    await submissions.create({verdict:"Wrong Answer",title:problem.title,user:user.email,solution:filepath,time:time})
                 }
                 // console.log(stdout)
                 resolve(stdout);
+            }
             }
         )
     })

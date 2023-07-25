@@ -17,19 +17,19 @@ const router = express.Router()
 router.use(requireAuth)
 
 // GET all problems
-router.get('/problems', getproblems)
+router.get('/', getproblems)
 
 //GET a single problem
-router.get('/problems/:id', getproblem)
+router.get('/:id', getproblem)
 
 //POST code
-router.post('/problems/:id', sendcode) 
+router.post('/:id', sendcode) 
 
 // GET all submissions
-router.get('/', getsubmissions)
+router.get('/submissions/solutions', getsubmissions)
 
 // GET code
-router.get('/solutions/:id', getcode)
+router.get('/submissions/solutions/:id', getcode)
 // // POST a new workout
 // router.post('/', createWorkout)
 

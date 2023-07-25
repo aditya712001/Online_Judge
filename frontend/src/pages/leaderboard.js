@@ -11,7 +11,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const fetchsubmissions = async () => {
-      const response = await fetch('/api/oj', {
+      const response = await fetch('/api/oj/submissions', {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
@@ -38,7 +38,7 @@ const Leaderboard = () => {
     }
     axios({
       method: 'get',
-      url: 'http://localhost:3000/api/oj/solutions/' + submission._id,
+      url: 'http://localhost:3000/api/oj/submissions/solutions/' + submission._id,
       responseType: 'blob',
       headers: {
             'Authorization': `Bearer ${user.token}`

@@ -56,6 +56,7 @@ const sendcode = async (req, res) => {
 const getsubmissions = async (req, res) => {
   // const user_id = req.user._id
   const submissionsdata = await submissions.find({}).sort({createdAt: -1})
+  // console.log(submissionsdata)
   res.status(200).json(submissionsdata)
 }
 

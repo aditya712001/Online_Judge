@@ -21,11 +21,11 @@ function App() {
         <div className="pages">
           <Routes>
           <Route 
-              path="/" 
+              path="/submissions/solutions" 
               element={user ? <Leaderboard /> : <Navigate to="/login" />} 
             />
             <Route 
-              path="/problems" 
+              path="/" 
               element={user ? <Problems /> : <Navigate to="/login" /> }
             />
             <Route 
@@ -37,7 +37,7 @@ function App() {
               element={!user ? <Signup /> : <Navigate to="/" />} 
             />
             <Route 
-              path="/problems/:id" 
+              path="/:id" 
               element={user ? <ProblemDetails /> : <Navigate to="/login" />} 
             />
           </Routes>

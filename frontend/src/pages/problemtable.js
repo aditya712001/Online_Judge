@@ -12,7 +12,7 @@ const Problems = () => {
 
   useEffect(() => {
     const fetchproblems = async () => {
-      const response = await fetch('/api/oj/problems', {
+      const response = await fetch('/api/oj/', {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()
@@ -48,7 +48,7 @@ const Problems = () => {
                        {problem.title}
                    </th>
                    <td class="px-6 py-4">
-                   <button><Link to={`/problems/${problem._id}`}>Try</Link></button>
+                   <button><Link to={`/${problem._id}`}>Try</Link></button>
                        {/* <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Download</a> */}
                    </td>
                </tr>

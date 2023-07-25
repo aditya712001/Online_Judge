@@ -22,7 +22,7 @@ const Compiler=()=> {
         //   }
         if(user)
         {
-          const response = await fetch('/api/oj/problems/'+ id, {
+          const response = await fetch('/api/oj/'+ id, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -34,7 +34,10 @@ const Compiler=()=> {
       
     //   const { data } = await axios.post('http://localhost:5000/run', payload);
       console.log(data)
+      if(data.output)
       setOutput(data.output)
+      else
+      setOutput(data.error.stderr)
         }
     } catch (error) {
       console.log(error.response)
@@ -58,9 +61,9 @@ const Compiler=()=> {
       <button onClick={handleSubmit}>
         Submit
       </button>
-      <br/>
       {output &&
         <div >
+        <br/>
           <pre wrap="True">{output}</pre>
         </div>
       }
