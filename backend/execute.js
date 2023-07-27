@@ -1,3 +1,4 @@
+const os=require("os")
 const { exec } = require("child_process")
 const fs = require("fs")
 const path = require("path")
@@ -12,7 +13,7 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true })
 }
 
-const executeCpp = async (filepath,id,user_id) => {
+const execute = async (language,filepath,id,user_id) => {
 
     const problem = await problems.findById(id) 
     const user = await User.findById(user_id) 
@@ -36,21 +37,45 @@ if (!fs.existsSync(dirtest)) {
         return text.trim();
     }
     fs.writeFileSync(filePathtest, input)
-
+    
     const jobId = path.basename(filepath).split(".")[0]
-    const outPath = path.join(outputPath, `${jobId}.exe`)
+    let executable=jobId
+    let command=""
+    if(language==="cpp"||language==="c"){
+    if(os.platform()==="linux")
+    executable+=".out"
+    else
+    executable+=".exe"
+    // const outPath = path.join(outputPath, `${jobId}.exe`)
+    const outPath = path.join(outputPath, executable)
+    
+    command=`g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${executable} < ${filePathtest} `
+    if(os.platform()==="linux")
+    command=`g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${executable} < ${filePathtest} `
+    }
 
+    if (language == "py") {
+        // command = `py ${filepath} < ${filePathtest} `;
+        // if (os.platform() === "linux")
+          command = `python ${filepath} < ${filePathtest} `;
+      }
+      
+    const timeLimit = 300; // time limit in milliseconds
     return new Promise((resolve, reject) => {
-        exec(
-            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${jobId}.exe < ${filePathtest} `,
+        let out=""
+        const child=exec(
+            // `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${executable} < ${filePathtest} `,
+            command,
             async(error, stdout, stderr) => {
                 if (error) {
                     // submissions.create({verdict:"Error"+error,title:problem.title,user:user.email,solution:filepath})
+                    console.log({ error, stderr })
                     reject({ error, stderr })
                     // stdout=error
                     // resolve(stdout);
                 }
                 if (stderr) {
+                    console.log(stderr)
                     const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
                     await submissions.create({verdict:"Compilation Error",title:problem.title,user:user.email,solution:filepath,time:time})
                     // stdout=stderr
@@ -59,6 +84,7 @@ if (!fs.existsSync(dirtest)) {
                 }
 
                 else{
+                    console.log(stdout)
                 const solution = normalize(stdout)
                 const expectedOutput = normalize(output)
                 
@@ -79,11 +105,33 @@ if (!fs.existsSync(dirtest)) {
                 // console.log(stdout)
                 resolve(stdout);
             }
-            }
+            }  
         )
+        // Kill the child process after the time limit is exceeded
+        const timer = setTimeout(() => {
+            exec(`taskkill /pid ${child.pid} /f /t`, (error, stdout, stderr) => {
+              if (error) {
+                console.error(`taskkill error: ${error}`);
+                return;
+              }
+          
+              console.log(`Child process killed after ${timeLimit} milliseconds`);
+              console.log(`stdout: ${stdout}`);
+              stdout="Time Limit Excedded"
+              out="Time Limit Excedded"
+              console.error(`stderr: ${stderr}`);
+            });
+          }, timeLimit);
+          
+          child.on('exit', () => {
+            clearTimeout(timer);
+            console.log('Child process exited before the time limit');
+          });
+          if(out)
+          resolve(stdout)
     })
 };
 
 module.exports = {
-    executeCpp,
+    execute,
 }

@@ -12,6 +12,9 @@
 textarea{
   border: solid;
 }
+select{
+  border: solid;
+}
 body {
   background: #f1f1f1;
   margin: 0;

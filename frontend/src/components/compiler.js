@@ -5,14 +5,15 @@ import { useParams, Link, redirect } from 'react-router-dom'
 const Compiler=()=> {
   const [code, setCode] = useState('')
   const [output, setOutput] = useState('')
+  const [language, setlanguage] = useState('cpp')
   const { id } = useParams()
   const { user } = useAuthContext()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const payload = {
-      language: 'cpp',
-      code
+      // language: 'cpp',
+      language,code
     }
 
     try {
@@ -47,13 +48,16 @@ const Compiler=()=> {
   return (
     <div >
           {/* <h1>AlgoU Online Code Compiler</h1> */}
-      {/* <select className="select-box">
+      <br />
+      <select value={language} onChange={(e) => {
+        setlanguage(e.target.value);
+      }}className="select-box">
         <option value='cpp'>C++</option>
         <option value='c'>C</option>
         <option value='py'>Python</option>
-        <option value='java'>Java</option>
+        {/* <option value='java'>Java</option> */}
       </select>
-      <br /> */}
+      {/* <br /> */}
       <textarea rows='20' cols='75' placeholder='Write your Code' value={code} onChange={(e) => {
         setCode(e.target.value);
       }}></textarea>
