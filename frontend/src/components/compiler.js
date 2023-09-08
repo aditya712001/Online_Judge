@@ -38,7 +38,7 @@ const Compiler=()=> {
       if(data.output)
       setOutput(data.output)
       else
-      setOutput(data.error.stderr)
+      setOutput(data.error)
         }
     } catch (error) {
       console.log(error.response)

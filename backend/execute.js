@@ -60,75 +60,60 @@ if (!fs.existsSync(dirtest)) {
           command = `python ${filepath} < ${filePathtest} `;
       }
       
-    const timeLimit = 300; // time limit in milliseconds
-    return new Promise((resolve, reject) => {
-        let out=""
-        const child=exec(
-            // `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${executable} < ${filePathtest} `,
-            command,
-            async(error, stdout, stderr) => {
-                if (error) {
-                    // submissions.create({verdict:"Error"+error,title:problem.title,user:user.email,solution:filepath})
-                    console.log({ error, stderr })
-                    reject({ error, stderr })
-                    // stdout=error
-                    // resolve(stdout);
-                }
-                if (stderr) {
-                    console.log(stderr)
-                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
-                    await submissions.create({verdict:"Compilation Error",title:problem.title,user:user.email,solution:filepath,time:time})
-                    // stdout=stderr
-                    reject(stderr)
-                    // resolve(stdout)
-                }
-
-                else{
-                    console.log(stdout)
-                const solution = normalize(stdout)
-                const expectedOutput = normalize(output)
-                
-                console.log(solution)
-                console.log(expectedOutput)
-                if(solution===expectedOutput)
-                {
-                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
-                    await submissions.create({verdict:"Accepted",title:problem.title,user:user.email,solution:filepath,time:time})
-                    stdout="Accepted\n"+stdout
-                }
-                else
-                {
-                    const time=new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()
-                    stdout="Wrong Answer"
-                    await submissions.create({verdict:"Wrong Answer",title:problem.title,user:user.email,solution:filepath,time:time})
-                }
-                // console.log(stdout)
-                resolve(stdout);
-            }
-            }  
-        )
-        // Kill the child process after the time limit is exceeded
-        const timer = setTimeout(() => {
-            exec(`taskkill /pid ${child.pid} /f /t`, (error, stdout, stderr) => {
-              if (error) {
-                console.error(`taskkill error: ${error}`);
+      return new Promise((resolve, reject) => {
+        const timeLimit = 700;
+        const child = exec(command, async (error, stdout, stderr) => {
+            if (stderr) {
+                console.log(stderr)
+                const time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+                await submissions.create({ verdict: "Compilation Error", title: problem.title, user: user.email, solution: filepath, time: time });
+                reject("Compilation Error:\n\n"+stderr);
                 return;
-              }
+            }
+    
+            const solution = normalize(stdout);
+            const expectedOutput = normalize(output);
+            console.log(solution)
+            if (solution === expectedOutput) {
+                const time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+                await submissions.create({ verdict: "Accepted", title: problem.title, user: user.email, solution: filepath, time: time })
+                resolve("Accepted");
+            } else {
+                const time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+                await submissions.create({ verdict: "Wrong Answer", title: problem.title, user: user.email, solution: filepath, time: time });
+                resolve("Wrong Answer");
+            }
+        });
+        
+        const timer = setTimeout(() => {
+            if (os.platform() === "win32") {
+                exec(`taskkill /pid ${child.pid} /f /t`, async (error) => {
+                    if (error) {
+                        console.error(`taskkill error: ${error}`);
+                        reject("Error during killing process");
+                        return;
+                    }
+                    console.log("Time Limit Exceeded")
+                    const time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+                    await submissions.create({ verdict: "Time Limit Exceeded", title: problem.title, user: user.email, solution: filepath, time: time });
+                    out="Time Limit Exceeded"
+                    resolve("Time Limit Exceeded");
+                });
+            } else {
+                child.kill('SIGKILL');
+                console.log(`Child process killed after ${timeLimit} milliseconds`);
+                resolve("Time Limit Exceeded");
+            }
+        }, timeLimit);
           
-              console.log(`Child process killed after ${timeLimit} milliseconds`);
-              console.log(`stdout: ${stdout}`);
-              stdout="Time Limit Excedded"
-              out="Time Limit Excedded"
-              console.error(`stderr: ${stderr}`);
-            });
-          }, timeLimit);
-          
-          child.on('exit', () => {
+        child.on('exit', async() => {
             clearTimeout(timer);
             console.log('Child process exited before the time limit');
           });
-          if(out)
-          resolve(stdout)
+        //   if(out)
+        //   resolve(out)
+// }
+
     })
 };
 

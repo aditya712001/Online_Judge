@@ -2,6 +2,8 @@ const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
 const { generateFile } = require('../generateFile')
 const { execute } = require('../execute')
+// const { compileAndRun } = require('../compileAndRun')
+const { compileAndRun } = require('../isolate_execute')
 const submissions = require('../models/submissionsmodel')
 
 // get all problems
@@ -45,7 +47,8 @@ const sendcode = async (req, res) => {
   }
   try {
       const filePath = await generateFile(language, code);
-      const output = await execute(language,filePath,id,user_id);
+      // const output = await execute(language,filePath,id,user_id);
+      const output = await compileAndRun(language,filePath,id,user_id);
       res.json({ filePath, output });
   } catch (error) {
       res.status(500).json({ error: error });
