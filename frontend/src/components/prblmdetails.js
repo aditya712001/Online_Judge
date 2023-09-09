@@ -33,7 +33,7 @@ const ProblemDetails = () => {
 
   useEffect(() => {
     const fetchproblem = async () => {
-      const response = await fetch('/api/oj/'+id, {
+      const response = await fetch(`${process.env.REACT_APP_URL}/api/oj/`+id, {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()

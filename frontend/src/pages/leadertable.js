@@ -12,7 +12,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const fetchsubmissions = async () => {
-      const response = await fetch('/api/oj/submissions/solutions', {
+      const response = await fetch(`${process.env.REACT_APP_URL}/api/oj/submissions/solutions`, {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()

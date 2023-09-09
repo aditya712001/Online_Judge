@@ -23,7 +23,7 @@ const Compiler=()=> {
         //   }
         if(user)
         {
-          const response = await fetch('/api/oj/'+ id, {
+          const response = await fetch(`${process.env.REACT_APP_URL}/api/oj/`+ id, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
