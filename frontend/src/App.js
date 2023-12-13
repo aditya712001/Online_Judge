@@ -8,8 +8,6 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Leaderboard from './pages/leadertable'
 import Navbar from './components/Navbar'
-// new
-// import WorkoutFormEdit from './components/WorkoutFormEdit'
 
 function App() {
   const { user } = useAuthContext()

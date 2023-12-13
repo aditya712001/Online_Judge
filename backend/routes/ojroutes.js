@@ -1,13 +1,10 @@
 const express = require('express')
 const {
-//   createWorkout,
   getproblems,
   getproblem,
   sendcode,
   getsubmissions,
   getcode
-//   deleteWorkout,
-//   updateWorkout
 } = require('../controllers/problemscontroller')
 const requireAuth = require('../middleware/requireAuth')
 
@@ -30,14 +27,6 @@ router.get('/submissions/solutions', getsubmissions)
 
 // GET code
 router.get('/submissions/solutions/:id', getcode)
-// // POST a new workout
-// router.post('/', createWorkout)
-
-// // DELETE a workout
-// router.delete('/:id', deleteWorkout)
-
-// // UPDATE a workout
-// router.patch('/:id', updateWorkout)
 
 
 module.exports = router

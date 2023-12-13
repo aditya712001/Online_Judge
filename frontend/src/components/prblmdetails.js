@@ -1,4 +1,3 @@
-// import { useWorkoutsContext } from '../hooks/useWorkoutsContext'
 import { useAuthContext } from '../hooks/useAuthContext'
 // // new
 import Compiler from '../components/compiler'
@@ -9,26 +8,8 @@ import { Link, useParams } from 'react-router-dom'
 
 const ProblemDetails = () => {
   const { id } = useParams();
-  // const { dispatch } = useWorkoutsContext()
   const { user } = useAuthContext()
-
-  // const handleClick = async () => {
-  //   if (!user) {
-  //     return
-  //   }
-
-  //   const response = await fetch('/api/workouts/' + workout._id, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Authorization': `Bearer ${user.token}`
-  //     }
-  //   })
-  //   const json = await response.json()
-
-  //   if (response.ok) {
-  //     dispatch({type: 'DELETE_WORKOUT', payload: json})
-  //   }
-  // }
+  
   const [problem, setproblem] = useState('')
 
   useEffect(() => {
@@ -41,7 +22,6 @@ const ProblemDetails = () => {
       if (response.ok) {
         setproblem(json)
         // console.log(problem.statement)
-        // dispatch({type: 'SET_WORKOUTS', payload: json})
       }
     }
 

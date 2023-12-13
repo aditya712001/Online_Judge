@@ -73,7 +73,7 @@ const Leaderboard = () => {
     }
     axios({
       method: 'get',
-      url: '/api/oj/submissions/solutions/' + submission._id,
+      url: `${process.env.REACT_APP_URL}/api/oj/submissions/solutions/` + submission._id,
       responseType: 'blob',
       headers: {
             'Authorization': `Bearer ${user.token}`

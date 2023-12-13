@@ -1,12 +1,8 @@
 import { useEffect, useState }from 'react'
-// import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 
-// components
-// import WorkoutForm from '../components/WorkoutForm'
 import { Link } from 'react-router-dom'
 const Problems = () => {
-  // const {workouts, dispatch} = useWorkoutsContext()
   const {user} = useAuthContext()
   const [problems, setproblems] = useState('')
 
@@ -19,7 +15,6 @@ const Problems = () => {
 
       if (response.ok) {
         setproblems(json)
-      //   dispatch({type: 'SET_WORKOUTS', payload: json})
       }
     }
 
@@ -38,7 +33,6 @@ const Problems = () => {
         </div>
         ))}
        </div>
-       {/*   <WorkoutForm />  */}
        </div>
   )
 }
