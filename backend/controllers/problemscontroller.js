@@ -2,8 +2,8 @@ const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
 const { generateFile } = require('../generateFile')
 const { execute } = require('../execute')
-// const { compileAndRun } = require('../compileAndRun')
-const { compileAndRun } = require('../isolate_execute')
+const { compileAndRun } = require('../compileAndRun')
+// const { compileAndRun } = require('../isolate_execute')
 const submissions = require('../models/submissionsmodel')
 
 // get all problems
@@ -46,10 +46,25 @@ const sendcode = async (req, res) => {
       return res.status(404).json({ success: false, error: "Empty code!" });
   }
   try {
-      const filePath = await generateFile(language, code);
+      // const filePath = await generateFile(language, code);
       // const output = await execute(language,filePath,id,user_id);
-      const output = await compileAndRun(language,filePath,id,user_id);
-      res.json({ filePath, output });
+      const { authorization } = req.headers
+      const payload = {
+        // language: 'cpp',
+        language,code,id,user_id
+      }  
+      const response = await fetch(`${process.env.DOCKERIZED_BACKEND}/api/oj/`, {
+        method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': authorization/*`Bearer ${user.token}`*/
+            }
+      })
+      const output = await response.json()
+      // console.log(output)
+      // const output = await compileAndRun(language,filePath,id,user_id);
+      res.json(output );
   } catch (error) {
       res.status(500).json({ error: error });
   }
