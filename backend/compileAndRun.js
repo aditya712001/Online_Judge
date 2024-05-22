@@ -5,13 +5,14 @@ const path = require("path")
 const problems = require('./models/problemsmodel')
 const mongoose = require('mongoose')
 const submissions = require('./models/submissionsmodel')
-const User = require('./models/userModel')
+const User = require('./models/userModel');
+const { generateFile } = require('./generateFile');
 
 const compileAndRun=async(language,filepath,id,user_id) => {
     const problem = await problems.findById(id)
     const user = await User.findById(user_id)  
-    const input = problem.ip // Your input string
-    const output=problem.op
+    let input = problem.ip // Your input string
+    let output=problem.op
     const timeLimit = 2000; // 5 seconds in milliseconds
 
     // const outputPath = filepath + '.exe';
@@ -32,7 +33,33 @@ const compileAndRun=async(language,filepath,id,user_id) => {
     const jobIDtest = uuid();
     const filename = `${jobIDtest}.txt`
     const filePathtest = path.join(dirtest, filename)
+
+    //decompression begins
+    const decodeBase64ToFile=async(base64Encoding, outputFile) => {
+        return new Promise((resolve, reject) => {
+            const buffer = Buffer.from(base64Encoding, "base64")
+            fs.writeFile(outputFile, buffer, (err) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+                resolve()
+            });
+        });
+    }
+
+    const decodeBase64ToString=async(base64Encoding, output) => {
+        return new Promise((resolve, reject) => {
+            output = Buffer.from(base64Encoding, "base64")
+            resolve(output);
+        });
+    }
+
     fs.writeFileSync(filePathtest, input)
+
+    await decodeBase64ToFile(filePathtest)
+    output=await decodeBase64ToString(output)
+    //decompression ends
     
     const jobId = path.basename(filepath).split(".")[0]
     let executable=jobId
