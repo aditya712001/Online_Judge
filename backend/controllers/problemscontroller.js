@@ -2,7 +2,7 @@ const problems = require('../models/problemsmodel')
 const mongoose = require('mongoose')
 const { generateFile } = require('../generateFile')
 const { execute } = require('../execute')
-const { compileAndRun } = require('../compileAndRun')
+const { compileAndRun } = require('../compileAndRun_dod')
 // const { compileAndRun } = require('../isolate_execute')
 const submissions = require('../models/submissionsmodel')
 
@@ -35,6 +35,40 @@ const getproblem = async (req, res) => {
   res.status(200).json(problem)
 }
 
+// const sendcode = async (req, res) => {
+//   // const language = req.body.language;
+//   // const code = req.body.code;
+//   const user_id = req.user._id
+//   const { language = 'cpp', code } = req.body;
+//   const { id } = req.params
+
+//   if (code === undefined) {
+//       return res.status(404).json({ success: false, error: "Empty code!" });
+//   }
+//   try {
+//       // const filePath = await generateFile(language, code);
+//       // const output = await execute(language,filePath,id,user_id);
+//       const { authorization } = req.headers
+//       const payload = {
+//         // language: 'cpp',
+//         language,code,id,user_id
+//       }  
+//       const response = await fetch(`${process.env.DOCKERIZED_BACKEND}/api/oj/`, {
+//         method: 'POST',
+//             body: JSON.stringify(payload),
+//             headers: {
+//               'Content-Type': 'application/json',
+//               'Authorization': authorization/*`Bearer ${user.token}`*/
+//             }
+//       })
+//       const output = await response.json()
+//       // console.log(output)
+//       // const output = await compileAndRun(language,filePath,id,user_id);
+//       res.json(output );
+//   } catch (error) {
+//       res.status(500).json({ error: error });
+//   }
+// }
 const sendcode = async (req, res) => {
   // const language = req.body.language;
   // const code = req.body.code;
@@ -46,26 +80,13 @@ const sendcode = async (req, res) => {
       return res.status(404).json({ success: false, error: "Empty code!" });
   }
   try {
-      // const filePath = await generateFile(language, code);
+      const filePath = await generateFile(language, code);
       // const output = await execute(language,filePath,id,user_id);
-      const { authorization } = req.headers
-      const payload = {
-        // language: 'cpp',
-        language,code,id,user_id
-      }  
-      const response = await fetch(`${process.env.DOCKERIZED_BACKEND}/api/oj/`, {
-        method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': authorization/*`Bearer ${user.token}`*/
-            }
-      })
-      const output = await response.json()
-      // console.log(output)
-      // const output = await compileAndRun(language,filePath,id,user_id);
-      res.json(output );
+      const output = await compileAndRun(language,filePath,id,user_id);
+      console.log(output)
+      res.json({ filePath, output });
   } catch (error) {
+    console.log(error)
       res.status(500).json({ error: error });
   }
 }
