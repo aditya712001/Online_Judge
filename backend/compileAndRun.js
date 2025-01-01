@@ -57,8 +57,8 @@ const compileAndRun=async(language,filepath,id,user_id) => {
 
     fs.writeFileSync(filePathtest, input)
 
-    // await decodeBase64ToFile(filePathtest)
-    // output=await decodeBase64ToString(output)
+    await decodeBase64ToFile(filePathtest)
+    output=await decodeBase64ToString(output)
     //decompression ends
     
     const jobId = path.basename(filepath).split(".")[0]
