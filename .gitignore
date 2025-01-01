@@ -1,1 +1,4 @@
-keys
+keys/
+backend/node_modules/
+backend/.env
+frontend/.env
